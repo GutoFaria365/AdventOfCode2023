@@ -1,16 +1,21 @@
 package org.example;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Day2 {
     public static void main(String[] args) {
-        String input = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green\n" +
-                "Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue\n" +
-                "Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red\n" +
-                "Game 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red\n" +
-                "Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green";
-        String[] lines = input.split("\n");
+        List<String> input = null;
+        try {
+            input = Files.readAllLines(Paths.get("src\\main\\java\\org\\example\\inputs\\Day2.txt"));
+            System.out.println("lines = " + input);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String[] lines = input.toArray(new String[0]);
         int totalGames = 0;
 
         for (String line : lines) {
@@ -110,7 +115,8 @@ public class Day2 {
             System.out.println("totalPower = " + totalPower);
             System.out.println("-".repeat(50));
         }
-
+        System.out.println("totalGames = " + totalGames);
+        System.out.println("totalPower = " + totalPower);
     }
 
 }

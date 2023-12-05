@@ -1,17 +1,20 @@
 package org.example;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+
 public class Day1 {
     public static void main(String[] args) {
-        String input = "two1nine\n" +
-                "eightwothree\n" +
-                "abcone2threexyz\n" +
-                "xtwone3four\n" +
-                "4nineeightseven2\n" +
-                "zoneight234\n" +
-                "7pqrstsixteen";
+        List<String> input = null;
+        try {
+            input = Files.readAllLines(Paths.get("src\\main\\java\\org\\example\\inputs\\Day1.txt"));
+            System.out.println("lines = " + input);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String[] lines = input.toArray(new String[0]);
         int total = 0;
-
-        String[] lines = input.split("\n");
 
         for (String line : lines) {
             System.out.println("------------------------");

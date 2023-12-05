@@ -1,31 +1,35 @@
 package org.example;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Day3 {
     public static void main(String[] args) {
-        String input =
-                "467..114............\n" +
-                "...*...........3339.\n" +
-                "..35..633...........\n" +
-                "......#.............\n" +
-                "617*................\n" +
-                ".....+.58...........\n" +
-                "..592...............\n" +
-                "......755...........\n" +
-                "...$.*..............\n" +
-                ".664.598............";
-        String[] lines = input.split("\n");
+        List<String> input = null;
+        try {
+            input = Files.readAllLines(Paths.get("src\\main\\java\\org\\example\\inputs\\Day3.txt"));
+            System.out.println("lines = " + input);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String[] lines = input.toArray(new String[0]);
         Map<Integer, Character> positionMapBefore = new HashMap<>();
         Map<Integer, Character> positionMapAfter = new HashMap<>();
+
         int total = 0;
         boolean validNumber = false;
+
+        int gearRatio = 0;
+        boolean validGear = false;
         for (int lineIndex = 0; lineIndex < lines.length; lineIndex++) {
             String line = lines[lineIndex];
-            char[] characters = line.toCharArray();
+            char[] characters = (line + ".").toCharArray();
             Map<Integer, Character> positionMap = new HashMap<>();
             StringBuilder currentWord = new StringBuilder();
+            StringBuilder currentGear = new StringBuilder();
 
             if (lineIndex < lines.length - 1) {
                 char[] nextCharacters = lines[lineIndex + 1].toCharArray();
@@ -61,18 +65,25 @@ public class Day3 {
 
                 }
 
-
                 validNumber = isValidNumber(validNumber, characters, i, previousChar);
                 validNumber = isValidNumber(validNumber, characters, i, nextChar);
 
-                validNumber = isValidNumber(validNumber, characters, i, positionMapBefore.get(i-1));
+                int beforeIndex = i - 1;
+                int afterIndex = i + 1;
+
+                if (i == 0) {
+                    beforeIndex = -1;
+                } else if (i == characters.length - 1) {
+                    afterIndex = -1;
+                }
+
+                validNumber = isValidNumber(validNumber, characters, i, positionMapBefore.get(beforeIndex));
                 validNumber = isValidNumber(validNumber, characters, i, positionMapBefore.get(i));
-                validNumber = isValidNumber(validNumber, characters, i, positionMapBefore.get(i+1));
+                validNumber = isValidNumber(validNumber, characters, i, positionMapBefore.get(afterIndex));
 
-                validNumber = isValidNumber(validNumber, characters, i, positionMapAfter.get(i-1));
+                validNumber = isValidNumber(validNumber, characters, i, positionMapAfter.get(beforeIndex));
                 validNumber = isValidNumber(validNumber, characters, i, positionMapAfter.get(i));
-                validNumber = isValidNumber(validNumber, characters, i, positionMapAfter.get(i+1));
-
+                validNumber = isValidNumber(validNumber, characters, i, positionMapAfter.get(afterIndex));
 
                 if (Character.isDigit(characters[i])) {
                     currentWord.append(characters[i]);
@@ -86,6 +97,126 @@ public class Day3 {
                     System.out.println("Word: " + currentWord);
                     currentWord.setLength(0);
                 }
+
+                //PART 2
+//                if (characters[i] == '*') {
+//                    int tempGear = 0;
+//
+//                    if (Character.isDigit(positionMap.get(i+1))){
+//                        currentGear.append(positionMap.get(i+1));
+//                        if (Character.isDigit(positionMap.get(i+2))) {
+//                            currentGear.append(positionMap.get(i+2));
+//                            if (Character.isDigit(positionMap.get(i+3))) {
+//                                currentGear.append(positionMap.get(i+3));
+//                            }
+//                        }
+//                        System.out.println("Gear: " + currentGear);
+//                    }
+//                    if (Character.isDigit(positionMap.get(i-1))){
+//                       if (currentGear.length() > 0){
+//                           tempGear = Integer.parseInt(currentGear.toString());
+//                           currentGear.setLength(0);
+//                       }
+//                        if (Character.isDigit(positionMap.get(i-2))) {
+//                            if (Character.isDigit(positionMap.get(i-3))) {
+//                                currentGear.append(positionMap.get(i-3));
+//                            }
+//                            currentGear.append(positionMap.get(i-2));
+//                        }
+//                        currentGear.append(positionMap.get(i-1));
+//                        System.out.println("Gear: " + currentGear);
+//                    }
+//
+//                    if (Character.isDigit(positionMapBefore.get(i-1))){
+//                        if (currentGear.length() > 0){
+//                            tempGear = Integer.parseInt(currentGear.toString());
+//                            currentGear.setLength(0);
+//                        }
+//
+//                        if (Character.isDigit(positionMapBefore.get(i-2))) {
+//                            if (Character.isDigit(positionMapBefore.get(i))) {
+//                                currentGear.append(positionMapBefore.get(i-2));
+//                                currentGear.append(positionMapBefore.get(i-1));
+//                                currentGear.append(positionMapBefore.get(i));
+//
+//                            } else if (Character.isDigit(positionMapBefore.get(i-3))) {
+//                                currentGear.append(positionMapBefore.get(i-3));
+//                                currentGear.append(positionMapBefore.get(i-2));
+//                                currentGear.append(positionMapBefore.get(i-1));
+//                            }
+//
+//                        }
+//
+//                        System.out.println("Gear: " + currentGear);
+//                    } else if (Character.isDigit(positionMapBefore.get(i))){
+//                        if (currentGear.length() > 0){
+//                            tempGear = Integer.parseInt(currentGear.toString());
+//                            currentGear.setLength(0);
+//                        }
+//
+//                        if (Character.isDigit(positionMapBefore.get(i-1))) {
+//                            if (Character.isDigit(positionMapBefore.get(i-2))) {
+//                                currentGear.append(positionMapBefore.get(i-2));
+//                                currentGear.append(positionMapBefore.get(i-1));
+//                                currentGear.append(positionMapBefore.get(i));
+//                            } else if (Character.isDigit(positionMapBefore.get(i+1))) {
+//                                currentGear.append(positionMapBefore.get(i-1));
+//                                currentGear.append(positionMapBefore.get(i));
+//                                currentGear.append(positionMapBefore.get(i+1));
+//                            }
+//                        } else if (Character.isDigit(positionMapBefore.get(i+1))) {
+//                            currentGear.append(positionMapBefore.get(i));
+//                            currentGear.append(positionMapBefore.get(i+1));
+//                            if (Character.isDigit(positionMapBefore.get(i+2))) {
+//                                currentGear.append(positionMapBefore.get(i+2));
+//                            }
+//                        }
+//
+//                        System.out.println("Gear: " + currentGear);
+//                    } else if (Character.isDigit(positionMapBefore.get(i+1))){
+//                        currentGear.append(positionMapBefore.get(i+1));
+//
+//                        if (Character.isDigit(positionMapBefore.get(i+2))) {
+//                            if (Character.isDigit(positionMapBefore.get(i))) {
+//                                currentGear.append(positionMapBefore.get(i-2));
+//                                currentGear.append(positionMapBefore.get(i-1));
+//                                currentGear.append(positionMapBefore.get(i));
+//
+//                            } else if (Character.isDigit(positionMapBefore.get(i+3))) {
+//                                currentGear.append(positionMapBefore.get(i+1));
+//                                currentGear.append(positionMapBefore.get(i+2));
+//                                currentGear.append(positionMapBefore.get(i+3));
+//                            }
+//
+//                        }
+//                        System.out.println("Gear: " + currentGear);
+//                    }
+//
+//
+//                    if (Character.isDigit(positionMapAfter.get(beforeIndex))){
+//                        currentGear.append(positionMapAfter.get(beforeIndex));
+//                        System.out.println("Gear: " + currentGear);
+//                    }
+//                    if (Character.isDigit(positionMapAfter.get(i))){
+//                        currentGear.append(positionMapAfter.get(i));
+//                        System.out.println("Gear: " + currentGear);
+//                    }
+//                    if (Character.isDigit(positionMapAfter.get(afterIndex))){
+//                        currentGear.append(positionMapAfter.get(afterIndex));
+//                        System.out.println("Gear: " + currentGear);
+//                    }
+////                    currentWord.append(characters[i]);
+//                }
+//                } else if (currentWord.length() > 0) {
+//                    if (validNumber){
+//                        validNumber = false;
+//                        total += Integer.parseInt(currentWord.toString());
+//                        currentWord.append("v");
+//                    }
+//                    System.out.println("Word: " + currentWord);
+//                    currentWord.setLength(0);
+//                }
+
 
             }
 
@@ -104,9 +235,11 @@ public class Day3 {
         if (nextChar == null){
             return validNumber;
         }
-        if ((characters[i] >= '0' && characters[i] <= '9') && (nextChar != '.') && (nextChar < '0' || nextChar > '9')) {
+
+        if ((characters[i] >= '0' && characters[i] <= '9') && (nextChar != '.') && (!Character.isDigit(nextChar))) {
             validNumber = true;
         }
         return validNumber;
     }
+
 }
