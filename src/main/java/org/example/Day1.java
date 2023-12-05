@@ -14,31 +14,40 @@ public class Day1 {
             e.printStackTrace();
         }
         String[] lines = input.toArray(new String[0]);
-        int total = 0;
+        int totalPart1 = 0;
+        int totalPart2 = 0;
 
         for (String line : lines) {
-            System.out.println("------------------------");
+
             System.out.println("line = " + line);
+            String numbers = line;
             String wordsToNumbers = findNumbers(line);
 
-            String numbersOnly = wordsToNumbers.replaceAll("[^0-9]", "");
-
-            if (!numbersOnly.isEmpty()) {
-                char firstDigit = numbersOnly.charAt(0);
-                char lastDigit = numbersOnly.charAt(numbersOnly.length() - 1);
-
-                int firstNumber = Character.getNumericValue(firstDigit);
-                int lastNumber = Character.getNumericValue(lastDigit);
-                total += (firstNumber * 10 + lastNumber);
-                int thisOne = (firstNumber * 10 + lastNumber);
-                System.out.println("this = " + thisOne);
-
-
-                System.out.println("current: " + total);
-            }
+            totalPart1 = getTotal(totalPart1, numbers);
+            totalPart2 = getTotal(totalPart2, wordsToNumbers);
+            System.out.println("-".repeat(50));
         }
-        System.out.println("total = " + total);
+        System.out.println("Final Count part1 = " + totalPart1);
+        System.out.println("Final Count part2 = " + totalPart2);
     }
+
+    private static int getTotal(int total, String wordsToNumbers) {
+        String numbersOnly = wordsToNumbers.replaceAll("[^0-9]", "");
+
+        if (!numbersOnly.isEmpty()) {
+            char firstDigit = numbersOnly.charAt(0);
+            char lastDigit = numbersOnly.charAt(numbersOnly.length() - 1);
+
+            int firstNumber = Character.getNumericValue(firstDigit);
+            int lastNumber = Character.getNumericValue(lastDigit);
+            total += (firstNumber * 10 + lastNumber);
+            int thisOne = (firstNumber * 10 + lastNumber);
+            System.out.println("this = " + thisOne);
+            System.out.println("current: " + total);
+        }
+        return total;
+    }
+
     public static String findNumbers(String wordsToNumbers) {
 
         String[] numberWords = {"nine","seven", "two", "three", "four", "five", "six", "eight", "one"};
