@@ -6,6 +6,9 @@ import java.util.List;
 
 public class Day1 {
     public static void main(String[] args) {
+//        String input = "";
+//        String[] lines = input.split("\n");
+
         List<String> input = null;
         try {
             input = Files.readAllLines(Paths.get("src\\main\\java\\org\\example\\inputs\\Day1.txt"));
