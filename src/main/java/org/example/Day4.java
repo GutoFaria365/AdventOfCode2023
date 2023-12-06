@@ -5,7 +5,9 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class Day4 {
+    private static HashMap<String, String> cache = new HashMap<>();
     public static void main(String[] args) {
+
         List<String> input = null;
         try {
             input = Files.readAllLines(Paths.get("src\\main\\java\\org\\example\\inputs\\Day4.txt"));
@@ -26,6 +28,7 @@ public class Day4 {
     }
 
     private static int part2(List<String> linesList, List<String> linesListTemp, int iteration, int grandTotal2) {
+        Map<Integer, String> cardPile = new HashMap<>();
         for (int lineIndex = 0; lineIndex < linesList.size(); lineIndex++) {
 
             String[] parts = linesList.get(lineIndex).split("\\|");
@@ -37,8 +40,14 @@ public class Day4 {
 
             int matchCount = countMatchingNumbers(winningNumbers, playedNumbers);
 
-            Map<String, Integer> cardCounts = countCards(linesListTemp);
             String targetCard = extractCardIdentifier(linesList.get(lineIndex));
+            cardPile.put(lineIndex+1, targetCard);
+
+            Map<String, Integer> cardCounts = countCards(linesListTemp, cardPile);
+
+
+
+
             int cards = cardCounts.get(targetCard);
 
             for (int i = 0; i < cards; i++) {
@@ -61,10 +70,11 @@ public class Day4 {
             System.out.println("-".repeat(50));
 
         }
+        cardPile.forEach((card, count) -> System.out.println(card + ": " + count + " copies"));
         return grandTotal2;
     }
 
-    private static Map<String, Integer> countCards(List<String> linesList) {
+    private static Map<String, Integer> countCards(List<String> linesList, Map<Integer, String> cardMap) {
         Map<String, Integer> cardCounts = new HashMap<>();
 
         for (String line : linesList) {
@@ -74,8 +84,14 @@ public class Day4 {
 
         return cardCounts;
     }
+
     private static String extractCardIdentifier(String line) {
-        return line.split(":")[0].trim();
+        if (cache.containsKey(line)) {
+            return cache.get(line);
+        }
+        String res = line.split(":")[0].trim();
+        cache.put(line, res);
+        return res;
     }
 
     private static void insertLine(List<String> list, int index, String value) {
